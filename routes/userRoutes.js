@@ -1,8 +1,8 @@
 // Import necessary modules
 const express = require('express');
 const router = express.Router();
-const {register, login, profile,getAllUsers, updateUser, deleteUser,updateUserAdmin} = require('../Controllers/userController');
-const { protect } = require('../Middleware/authMiddleware');
+const {register, login, profile,getAllUsers, updateUser, deleteUser,updateUserAdmin} = require('../controllers/userController');
+const { protect } = require('../middleware/authMiddleware');
 
 
 // Create a new user
