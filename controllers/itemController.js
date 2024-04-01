@@ -4,10 +4,12 @@ const Item = require('../models/itemModel')
 
 const addItem = expressAsyncHandler(async (req,res) => {
     try {
+        console.log(req.body)
         const newItem = await Item.create(req.body)
         res.status(200).json({newItem})
     } catch (error) {
         res.status(400).json({message : error.message})
+        console.log(error)
     }
 })
 
