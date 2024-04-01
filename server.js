@@ -6,6 +6,8 @@ const cors = require('cors');
 
 //importing routers
 const userRouter = require('./routes/userRoutes')
+const itemRouter = require('./routes/itemRoutes')
+const collectionRouter = require('./routes/collectionRoutes')
 
 
 const app = express();//create express app
@@ -28,6 +30,8 @@ app.use((req, res, next) => {
 
 // routes
 app.use('/api/auth',userRouter)
+app.use('/api/item',itemRouter)
+app.use('/api/collection',collectionRouter)
 
 
 mongoose.connect(process.env.MONGO_URI)
