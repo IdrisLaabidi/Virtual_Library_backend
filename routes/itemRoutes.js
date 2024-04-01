@@ -7,7 +7,7 @@ router.post('/',protect,addItem)
 
 router.get('/',protect,getAllItems)
 
-router.get('/:id',protect,getAllItems)
+router.get('/:id',protect,getItem)
 
 router.get('/collection/:collectionId',protect,getItemsinCollection)
 
