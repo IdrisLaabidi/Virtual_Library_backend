@@ -1,13 +1,19 @@
 const expressAsyncHandler = require('express-async-handler');
 const Item = require('../models/itemModel')
+const Collection = require('../models/collectionModel')
 
 
 const addItem = expressAsyncHandler(async (req,res) => {
     try {
+        console.log(req.body)
         const newItem = await Item.create(req.body)
+        const collection = await Collection.findById(req.body.collection)
+        collection.items.push(newItem._id)
+        await collection.save()
         res.status(200).json({newItem})
     } catch (error) {
         res.status(400).json({message : error.message})
+        console.log(error)
     }
 })
 
