@@ -3,7 +3,8 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt")
-
+const {ref, uploadBytes, getDownloadURL } = require('firebase/storage');
+const {storage } = require('../firebase-client-config')
 const asyncHandler = require('express-async-handler')
 
 // Create a function to generate a token
@@ -113,15 +114,13 @@ const updateUser = asyncHandler(async (req, res) => {
 
     // If a new password is provided, hash it before saving
     if (req.body.password) {
-    //check if the current password is the actual user password
+      // Check if the current password is the actual user password
       const currentPasswordMatch = await bcrypt.compare(req.body.currentPassword, user.password);
       if (!currentPasswordMatch) {
-        
         return res.status(401).json({ message: 'Current password is incorrect' });
       }
 
       // Hash the new password
-      
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(req.body.password, salt);
       // Update the password in the user object
@@ -132,15 +131,29 @@ const updateUser = asyncHandler(async (req, res) => {
     if (req.body.firstName) user.firstName = req.body.firstName;
     if (req.body.lastName) user.lastName = req.body.lastName;
     if (req.body.email) user.email = req.body.email;
+    if (req.body.profilePicture) {
+      //kharjet data mel image objString b ta7ayol
+      const image =  req.body.profilePicture 
+      const base64Image =  image.split(",")[1];
+      const buffer = Buffer.from(base64Image, 'base64');//Node.js takes the base64-encoded string (base64Image) and decodes it into binary data
+
+      // Upload the profile picture to Firebase Storage
+      const imageRef = ref(storage, `ItemsImages/${user._id}/profile-picture.png`);
+      await uploadBytes(imageRef, buffer);
+
+      // Get the download URL of the uploaded file
+      const pictureURL = await getDownloadURL(imageRef);
+      user.pictureURL = pictureURL;
+    }
 
     // Save the updated user
-    const updatedUser = await User.findByIdAndUpdate(user._id, user);
+    const updatedUser = await user.save();
 
     // Return the updated user data
     res.json(updatedUser);
   } catch (error) {
     res.status(400).json({ error: error.message });
-    console.log(error)
+    console.log(error);
   }
 });
 const updateUserAdmin = asyncHandler(async (req, res) => {
