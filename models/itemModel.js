@@ -12,7 +12,7 @@ const ItemSchema = new mongoose.Schema({
     imageLink : { type : String },
     isbn : { type : Number , default : 0 },
     price : { type : Number },
-    pageNumber : { type : Number , default : 0 },
-    duree : { type : Number , default : 0 },
+    pageNumber : { type : Number },
+    itemImgURL : {type: String}
 })
 module.exports = mongoose.model('Item',ItemSchema)

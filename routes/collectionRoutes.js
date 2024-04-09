@@ -3,7 +3,7 @@ const router = express.Router()
 const {addCollection,getAllCollections,updateCollection,deleteCollection,getCollection} = require('../controllers/collectionController')
 const {protect} = require('../middleware/authMiddleware')
 
-router.get('/',protect,getAllCollections)
+router.get('/:userid',protect,getAllCollections)
 
 router.get('/:id',protect,getCollection)
 
