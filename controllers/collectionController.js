@@ -1,5 +1,6 @@
 const expressAsyncHandler = require('express-async-handler');
 const Collection = require('../models/collectionModel')
+const Item = require('../models/itemModel')
 
 const addCollection = expressAsyncHandler(async (req, res) => {
     try {
@@ -49,7 +50,15 @@ const updateCollection = expressAsyncHandler( async (req, res) => {
 
 const deleteCollection = expressAsyncHandler(async (req, res) => {
     try {
+        // Find the collection first
+        const collection = await Collection.findOne({ _id: req.params.id });
+
+        // Delete all items in the collection
+            await Item.deleteMany({ _id: { $in: collection.items } });
+
+        // Delete the collection
         const collectionSupprimee = await Collection.findOneAndDelete({ _id: req.params.id });
+
         res.status(200).json({ collectionSupprimee });
     } catch (erreur) {
         res.status(400).json({ message: erreur.message });
