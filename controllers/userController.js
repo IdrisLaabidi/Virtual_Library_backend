@@ -138,7 +138,7 @@ const updateUser = asyncHandler(async (req, res) => {
       const buffer = Buffer.from(base64Image, 'base64');//Node.js takes the base64-encoded string (base64Image) and decodes it into binary data
 
       // Upload the profile picture to Firebase Storage
-      const imageRef = ref(storage, `ItemsImages/${user._id}/profile-picture.png`);
+      const imageRef = ref(storage, `profileImages/${user._id}/profile-picture.png`);
       await uploadBytes(imageRef, buffer);
 
       // Get the download URL of the uploaded file
