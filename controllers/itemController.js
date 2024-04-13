@@ -1,21 +1,37 @@
 const expressAsyncHandler = require('express-async-handler');
 const Item = require('../models/itemModel')
-const Collection = require('../models/collectionModel')
+const Collection = require('../models/collectionModel');
+const {ref, uploadBytes, getDownloadURL } = require('firebase/storage');
+const {storage } = require('../firebase-client-config')
+const asyncHandler = require('express-async-handler')
 
-
-const addItem = expressAsyncHandler(async (req,res) => {
+const addItem = expressAsyncHandler(async (req, res) => {
     try {
-        console.log(req.body)
-        const newItem = await Item.create(req.body)
-        const collection = await Collection.findById(req.body.collection)
-        collection.items.push(newItem._id)
-        await collection.save()
-        res.status(200).json({newItem})
+      const newItem = await Item.create(req.body);
+      const newItemCollection = await Collection.findById(req.body.group);
+      newItemCollection.items.push(newItem._id);
+      if (req.body.itemPicture) {
+        //ta7ayol again
+        const image =  req.body.itemPicture 
+        const base64Image =  image.split(",")[1];
+        const buffer = Buffer.from(base64Image, 'base64');//Node.js takes the base64-encoded string (base64Image) and decodes it into binary data
+  
+        // Upload the profile picture to Firebase Storage
+        const imageRef = ref(storage, `ItemsImages/${newItem._id}/item-picture.jpg`);
+        await uploadBytes(imageRef, buffer);
+  
+        // Get the download URL of the uploaded file
+        const itemImgURL = await getDownloadURL(imageRef);
+        newItem.itemImgURL = itemImgURL;
+        console.log(newItem.itemImgURL)
+      }
+        await newItemCollection.save();
+        await newItem.save()
+      res.status(200).json({ newItem,newItemCollection });
     } catch (error) {
-        res.status(400).json({message : error.message})
-        console.log(error)
+      res.status(400).json({ message: error.message });
     }
-})
+  });
 
 const getItem = expressAsyncHandler(async (req,res) =>{
     try {
@@ -59,7 +75,7 @@ const deleteItem = expressAsyncHandler(async (req,res) =>{
 
 const getItemsinCollection = expressAsyncHandler(async (req,res) =>{
     try {
-        const itemsInCollection = await Item.find({ collection: req.params.collectionId });
+        const itemsInCollection = await Item.find({ group: req.params.collectionId });
         res.status(200).json({ itemsInCollection });
     } catch (error) {
         res.status(400).json({ message: error.message });
