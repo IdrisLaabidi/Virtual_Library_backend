@@ -14,5 +14,6 @@ const ItemSchema = new mongoose.Schema({
     price : { type : Number },
     pageNumber : { type : Number , default : 0 },
     duree : { type : Number , default : 0 },
+    itemImgURL : {type: String},
 })
 module.exports = mongoose.model('Item',ItemSchema)
