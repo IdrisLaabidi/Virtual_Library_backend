@@ -29,7 +29,8 @@ const getCollection = expressAsyncHandler(async (req, res) => {
         if (!collection) {
             return res.status(404).json({ message: 'Collection non trouvée' });
         }
-        res.status(200).json({ collection });
+        console.log(collection)
+        res.status(200).json(collection);
     } catch (erreur) {
         res.status(400).json({ message: erreur.message });
     }
