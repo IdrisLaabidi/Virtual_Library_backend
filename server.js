@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRoutes')
 const itemRouter = require('./routes/itemRoutes')
 const collectionRouter = require('./routes/collectionRoutes')
+const feedbackRouter =require('./routes/feedbackRoutes')
 
 
 const app = express();//create express app
@@ -34,6 +35,8 @@ app.use((req, res, next) => {
 app.use('/api/auth',userRouter)
 app.use('/api/item',itemRouter)
 app.use('/api/collection',collectionRouter)
+app.use('/api/feedback',feedbackRouter)
+
 
 
 mongoose.connect(process.env.MONGO_URI)
