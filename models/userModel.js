@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['user','admin'], default: 'user' },
   pictureURL: { type: String }, // You can add validation rules for URLs if required
-
+  sharedCollections : [{type: mongoose.Schema.Types.ObjectId, ref: 'Collection'}],
  
 });
 
