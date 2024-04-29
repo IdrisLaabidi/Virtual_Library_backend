@@ -25,13 +25,17 @@ const addItem = expressAsyncHandler(async (req, res) => {
         newItem.itemImgURL = itemImgURL;
         console.log(newItem.itemImgURL)
       }
-      if(req.body.pdfFile){
-        const pdf = req.body.pdfFile
-        const pdfRef = ref(storage, `pdfs/${pdfFile.name}`);
-        const pdfBuffer = req.files.pdf[0].buffer
+      console.log(req.body)
+      if(req.body.itemFile){
+        console.log("gggg")
+        const pdf = req.body.itemFile
+        console.log(pdf.name)
+        const pdfRef = ref(storage, `pdfs/${itemFile.name}`);
+        const pdfBuffer =pdf[0].buffer
         await uploadBytes(pdfRef, pdfBuffer)
         const pdfURL = await getDownloadURL(pdfRef);
         newItem.pdfURL = pdfURL; 
+        console.log(pdfURL)
         }
         await newItemCollection.save();
         await newItem.save()

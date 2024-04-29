@@ -15,5 +15,7 @@ const ItemSchema = new mongoose.Schema({
     pageNumber : { type : Number , default : 0 },
     duree : { type : Number , default : 0 },
     itemImgURL : {type: String},
+    pdfURL :  {type: String}
+
 })
 module.exports = mongoose.model('Item',ItemSchema)
